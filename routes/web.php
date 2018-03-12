@@ -10,8 +10,8 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Microsoft\Graph\Graph;
 use Microsoft\Graph\Model;
 
@@ -19,22 +19,17 @@ use Illuminate\Support\Facades\DB as DB;
 
 Route::get('/', function () {
     return view('welcome');
-})->middleware('expiry');
+});
 
-Route::get('/login', function ()
-{
-    //echo session('state');
-    return view('login',['State' => session('state')]);
-
+Route::get('/login', function () {
+    return view('login', ['State' => session('state')]);
 });
 
 
-Route::post('/UpdateDB',function(Request $request)
-{
-    $email = $request->input('email');
-    $password = $request->input('password');
-    echo "Email: " . $email . " and Password: " . $password ;
-
+Route::post('/UpdateDB', function (Request $request) {
+    if (!app('App\Traits\CheckExpiry')->checkexpiry()) {
+        return redirect('/');
+    }
 
 
     $graph = new Graph();
@@ -42,49 +37,33 @@ Route::post('/UpdateDB',function(Request $request)
     $graph->setAccessToken($_SESSION['Access_Token']);
 
     $me = $graph->createRequest("get", "/me")
-
         ->setReturnType(Model\User::class)
-
         ->execute();
 
     echo $me->getDisplayName() . '<br> eMAIL-  ';
     echo $me->getMail();
 
-    DB::insert('INSERT INTO user
-(
-NAME,
-EMAIL,
-CONTACT,
-TYPE,
-STATUS,
-SOCIETY,
-POST)
+    DB::insert(
+        'INSERT INTO user
+( NAME,EMAIL, CONTACT,TYPE,STATUS,SOCIETY,POST)
 VALUES
-(\''.$me->getDisplayName()
-        .'\',\''. $me->getMail()
-        .'\','. $request->input('Contact')
-        .','. '"User",'. '"UnderReview",\''
-        . $request->input('Society')
-        .'\',\''. $request->input('Post')
-        .'\');'
+(\'' . $me->getDisplayName() . '\',\'' . $me->getMail() . '\',' . $request->input('Contact') . ',' . '"User",' . '"UnderReview",\'' . $request->input('Society') . '\',\'' . $request->input('Post') . '\');'
     );
     DB::commit();
     return redirect('/');
-})->middleware('expiry');
+})->name('Enter Your Details');
 
 Route::get('/EnterYourDetails', function () {
 
-    $Email=session('Email');
+    if (!app('App\Traits\CheckExpiry')->checkexpiry()) {
+        return redirect('/');
+    }
     $Name = session('Name');
+    return view('details', ['Name' => $Name]);
 
-
-    return view('details',['Email' => $Email,'Name' => $Name]);
-
-})->middleware('expiry');
-
+});
 
 Route::get('/logout', function () {
-
     return view('logout');
 });
 
@@ -103,10 +82,10 @@ Route::get('/oauth', function (Request $request) {
         session_start();
     }
 
-    if(isset($_SESSION['EX_TIME']) && ($_SESSION['EX_TIME']-time()>0))
-    {
+    if (isset($_SESSION['EX_TIME']) && ($_SESSION['EX_TIME'] - time() > 0)) {
         return redirect('/');
     }
+
     if ($_SERVER['REQUEST_METHOD'] === 'GET' && !isset($_GET['code'])) {
         $authorizationUrl = $provider->getAuthorizationUrl();
         // The OAuth library automaticaly generates a state value that we can
@@ -124,10 +103,10 @@ Route::get('/oauth', function (Request $request) {
         try {
             // Get an access token using the authorization code grant
             $accessToken = $provider->getAccessToken('authorization_code', [
-                'code'     => $_GET['code']
+                'code' => $_GET['code']
             ]);
             $_SESSION['Access_Token'] = $accessToken->getToken();
-            $_SESSION['EX_TIME']=$accessToken->getExpires()-3500;
+            $_SESSION['EX_TIME'] = $accessToken->getExpires() - 3500;
 
             /*// The id token is a JWT token that contains information about the user
             // It's a base64 coded string that has a header, payload and signature
@@ -148,9 +127,7 @@ Route::get('/oauth', function (Request $request) {
             $graph->setAccessToken($accessToken->getToken());
 
             $me = $graph->createRequest("get", "/me")
-
                 ->setReturnType(Model\User::class)
-
                 ->execute();
 
             echo $me->getDisplayName() . '<br> eMAIL-  ';
@@ -158,15 +135,13 @@ Route::get('/oauth', function (Request $request) {
 
             $pos = strpos($me->getMail(), '@nuigalway.ie');
 
-// Note our use of ===.  Simply == would not work as expected
-// because the position of 'a' was the 0th (first) character.
             if ($pos === false) {
                 echo "LogIn using NUI galway ID";
             } else {
+                $user = \DB::select('select count(*) as c from user WHERE EMAIL=?', [$me->getMail()]);
 
-                $user = \DB::select('select count(*) as c from user WHERE EMAIL=?',[$me->getMail()]);
                 if ($user[0]->c == 0) {
-                    $parameters = ['Email' => $me->getMail(), 'Name' => $me->getDisplayName()];
+                    $parameters = ['Name' => $me->getDisplayName()];
                     return redirect('/EnterYourDetails')->with($parameters);
                 } else {
                     return redirect('/');
@@ -176,8 +151,6 @@ Route::get('/oauth', function (Request $request) {
             echo 'Something went wrong, couldn\'t get tokens: ' . $e->getMessage();
         }
     }
-echo "test";
-
 
 
 })->name('login');

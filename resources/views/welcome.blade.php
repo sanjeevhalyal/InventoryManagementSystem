@@ -73,6 +73,15 @@
 </head>
 <body>
 
+
+
+@if(app('App\Traits\CheckExpiry')->checkexpiry())
+
+<?php
+$me=app('App\Traits\GetMe')->getme();
+?>
+
+
 <!--Import jQuery before materialize.js-->
 <script type="text/javascript" src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript" src="js/materialize.min.js"></script>
@@ -80,53 +89,47 @@
 <div class="flex-center position-ref full-height">
 
                 <a href="{{ url('/') }}">  Home(
-                       <?php
-                    use Microsoft\Graph\Graph;
-                    use Microsoft\Graph\Model;
-                    $graph = new Graph();
+                    <?php
 
-                    $graph->setAccessToken($_SESSION['Access_Token']);
+                    ?>
+                    {{ $me}}
+                     ) </a>
 
-                    $me = $graph->createRequest("get", "/me")
-
-                        ->setReturnType(Model\User::class)
-
-                        ->execute();
-                    echo $me->getMail();
-                    ?> ) </a>
-
-
-            <a href="{{ url('/logout')}}" >  Log out  </a>
         </div>
 
     <div class="content">
 
-
-        <?php
-        echo 'Test';
-        if(empty($_SESSION['Access_Token'])) {
-            echo 'Not set!';
-        }
-        else
-        {
-            echo $_SESSION['EX_TIME']-time();
-            echo "</br>";
-        }
-        ?>
-
         <a href="{{url('/logout')}}">Log out</a>
+
 
         <div class="title m-b-md">
             Laravel
+
         </div>
-        <div class="links">
-            <a href="https://laravel.com/docs">Documentation</a>
-            <a href="https://laracasts.com">Laracasts</a>
-            <a href="https://laravel-news.com">News</a>
-            <a href="https://forge.laravel.com">Forge</a>
-            <a href="https://github.com/laravel/laravel">GitHub</a>
-        </div>
+
+
     </div>
+
 </div>
+
+@else
+    <?php
+
+
+    $parameters = ['state' => "Your Session Has Logged out,   Please Login Again"];
+    if (session_status() == PHP_SESSION_NONE) {
+    session_start();
+    }
+    $_SESSION['EX_TIME'] = (isset($_SESSION['EX_TIME']) ? $_SESSION['EX_TIME'] : null);
+    if(!($_SESSION['EX_TIME']-time()>0))
+    {
+    session_unset();
+    session_destroy();
+    }
+
+    ?>
+    @include('loginoption');
+@endif
+
 </body>
 </html>
