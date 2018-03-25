@@ -15,10 +15,14 @@ class GetMe
             $graph->setAccessToken($_SESSION['Access_Token']);
             $me = $graph->createRequest("get", "/me")
                 ->setReturnType(Model\User::class)
-                ->execute()->getmail();
+                ->execute();
 
         }
 
+        $user = \DB::select('select TYPE  from user WHERE EMAIL=?', [$me->getMail()]);
+
+        $me->usertype="Not a User";
+        $me->usertype=$user[0]->TYPE;
         return $me;
     }
 }

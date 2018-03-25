@@ -79,6 +79,8 @@
 
 <?php
 $me=app('App\Traits\GetMe')->getme();
+$path=app_path().'\Python\Mail.py';
+
 ?>
 
 
@@ -92,7 +94,7 @@ $me=app('App\Traits\GetMe')->getme();
                     <?php
 
                     ?>
-                    {{ $me}}
+                    {{ $me->getmail()}}
                      ) </a>
 
         </div>
@@ -104,7 +106,7 @@ $me=app('App\Traits\GetMe')->getme();
 
         <div class="title m-b-md">
             Laravel
-
+            {{ $me->usertype}}
         </div>
 
 
