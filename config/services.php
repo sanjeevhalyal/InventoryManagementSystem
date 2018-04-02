@@ -35,4 +35,10 @@ return [
         'secret' => env('STRIPE_SECRET'),
     ],
 
+    'graph' => [
+        'client_id' => 'ead9d9e3-f1d2-4b47-be43-b044994f496a',
+        'client_secret' => 'on46*ssvciBCCVEJA113?$$',
+        'redirect' => 'http://localhost:80/oauth/callback',
+    ],
+
 ];
