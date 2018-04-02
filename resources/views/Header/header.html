@@ -6,16 +6,18 @@
     <link rel="stylesheet" href="css/bootstrap.css">
     <style media="screen">
     .nav1 .navbar-brand {
-height: 80px;
-}
+      height: 40px;
+      padding: 5px;
+      width: auto;
+    }
+    .navbar {
+      margin: 0;
+    }
+    .nav1 .nav >li >a {
+    padding-top: 15px;
+    padding-bottom: 10px;
+    }
 
-.nav1 .nav >li >a {
-padding-top: 30px;
-padding-bottom: 30px;
-}
-.nav1 .navbar-toggle {
-padding: 10px;
-}
     </style>
   </head>
   <body>
@@ -29,28 +31,39 @@ padding: 10px;
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#"><img src="img/nui-logo.jpg" alt="Logo" height="55px"></a>
+            <a class="navbar-brand" href="#"><img src="img/nui-logo.jpg" alt="Logo" height="40px">
+            </a>
           </div>
           <div id="navbar3" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li class="active"><a href="#">Home</a></li>
+              <li><a href="#">Home</a></li>
               <li><a href="#">About</a></li>
               <li><a href="#">Contact</a></li>
-              <li><a href="#">Cart</a></li>
-              <li><a href="#">Help</a></li>
+              <li><a href="help.html">Cart</a></li>
+              <li><a href="help.html">Help</a></li>
+              <li>
+                <form class="navbar-form navbar-right" >
+                  <div class="form-group">
+                    <div class="input-group">
+                      <input type="text" class="form-control">
+                      <span class="input-group-btn">
+                        <button on-click="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+                      </span>
+                    </div>
+                  </div>
+                </form>
+              </li>
             </ul>
           </div>
-
           <!--/.nav-collapse -->
         </div>
         <!--/.container-fluid -->
       </nav>
     </div>
+
     <!-- jQuery -->
     <script src="jquery/jquery.js"></script>
-
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
-
   </body>
 </html>

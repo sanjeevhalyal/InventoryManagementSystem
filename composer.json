@@ -8,10 +8,13 @@
         "php": ">=7.0.0",
         "fideloper/proxy": "~3.3",
         "laravel/framework": "5.5.36",
+        "laravel/socialite": "^3.0",
         "laravel/tinker": "~1.0",
+        "laravelcollective/html": "^5.4.0",
         "league/oauth2-client": "^1.4",
         "microsoft/microsoft-graph": "^1.0.1",
-        "laravelcollective/html":"^5.4.0"
+        "phpmailer/phpmailer": "^6.0",
+        "socialiteproviders/microsoft-graph": "^2.0"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

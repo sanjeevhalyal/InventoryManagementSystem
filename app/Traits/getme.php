@@ -16,14 +16,16 @@ class GetMe
             $me = $graph->createRequest("get", "/me")
                 ->setReturnType(Model\User::class)
                 ->execute();
+            $user = \DB::select('select TYPE,ID  from user WHERE EMAIL=?', [$me->getMail()]);
 
+            $me->usertype="Not a User";
+            $me->usertype=$user[0]->TYPE;
+            $me->userid=-1;
+            $me->userid=$user[0]->ID;
+
+            return $me;
         }
-        $user = \DB::select('select TYPE  from user WHERE EMAIL=?', [$me->getMail()]);
 
-        $me->usertype="Not a User";
-        $me->usertype=$user[0]->TYPE;
-
-        return $me;
     }
 }
 ?>
