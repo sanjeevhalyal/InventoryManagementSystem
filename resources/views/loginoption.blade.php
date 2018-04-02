@@ -17,18 +17,20 @@
     }
 
     .modalDialog > div {
-        width: 300px;
+        width: 400px;
         position: relative;
         margin: 10% auto;
         padding: 5px 20px 13px 20px;
         border-radius: 10px;
         background: #fff;
+        background: -moz-linear-gradient(#fff, #999);
+        background: -webkit-linear-gradient(#fff, #999);
+        background: -o-linear-gradient(#fff, #999);
     }
     #inner {
         width: 100%;
-        display: flex;
-        justify-content: center;
-
+        margin: 0 auto;
+        border-radius:5px;
     }
 
 </style>
@@ -46,14 +48,12 @@
         $image=asset('img/microsoftlogo.png');
         ?>
         <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+        <a id="link"  href="{{url('/oauth')}}">
+        <div id="inner" class="w3-button w3-blue">
 
-        <div id="inner" >
-            <a id="link"  href="{{url('/oauth')}}">
-            <button type="button" class="btn btn-light" ><img  width="40px" height="40px" src="https://use.fontawesome.com/releases/v5.0.9/svgs/brands/windows.svg" >
-                <span style="color:black">Click to Login using Microsoft</span></button>
-            </a>
+            <img  width="40px" height="40px" src="{{$image}}" >
+             Click to Login using Microsoft
         </div>
-
-
+        </a>
     </div>
 </div>

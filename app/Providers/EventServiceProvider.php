@@ -16,9 +16,6 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\Event' => [
             'App\Listeners\EventListener',
         ],
-        'SocialiteProviders\Manager\SocialiteWasCalled' => [
-            'SocialiteProviders\Graph\GraphExtendSocialite@handle'
-        ],
     ];
 
     /**

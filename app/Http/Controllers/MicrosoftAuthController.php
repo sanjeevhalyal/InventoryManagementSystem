@@ -21,7 +21,7 @@ class MicrosoftAuthController extends Controller
         $provider = new \League\OAuth2\Client\Provider\GenericProvider([
             'clientId' => 'ead9d9e3-f1d2-4b47-be43-b044994f496a',
             'clientSecret' => 'on46*ssvciBCCVEJA113?$$',
-            'redirectUri' => 'http://localhost:80/oauth',
+            'redirectUri' => 'http://localhost:8000/oauth',
             'urlAuthorize' => 'https://login.microsoftonline.com/common/oauth2/v2.0/authorize',
             'urlAccessToken' => 'https://login.microsoftonline.com/common/oauth2/v2.0/token',
             'urlResourceOwnerDetails' => '',
@@ -43,8 +43,7 @@ class MicrosoftAuthController extends Controller
             $_SESSION['state'] = $provider->getState();
             header('Location: ' . $authorizationUrl);
             exit();
-        }
-        elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['code'])) {
+        } elseif ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['code'])) {
             // Validate the OAuth state parameter
             if (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['state'])) {
                 unset($_SESSION['state']);
@@ -56,7 +55,6 @@ class MicrosoftAuthController extends Controller
                 $accessToken = $provider->getAccessToken('authorization_code', [
                     'code' => $_GET['code']
                 ]);
-                $_SESSION['Cart']="000000";
                 $_SESSION['Access_Token'] = $accessToken->getToken();
                 $_SESSION['EX_TIME'] = $accessToken->getExpires() - 3500;
 
